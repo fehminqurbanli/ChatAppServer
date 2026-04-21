@@ -14,7 +14,7 @@ namespace ChatAppServer.WebAPI.Controllers
     {
         [HttpPost]
         public async Task<IActionResult> Register
-            (RegisterDto request,
+            ([FromForm] RegisterDto request,
             CancellationToken cancellationToken)
         {
             bool isNameExist = await context.Users
@@ -33,7 +33,7 @@ namespace ChatAppServer.WebAPI.Controllers
             await context.AddAsync(user, cancellationToken);
             await context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(user);
         }
 
         [HttpGet]

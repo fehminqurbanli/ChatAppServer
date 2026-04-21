@@ -8,18 +8,35 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
     builder.Configuration.GetConnectionString("SqlServer")));
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
